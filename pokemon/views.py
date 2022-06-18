@@ -23,7 +23,7 @@ class PokemonViewSet(
     pars_data = response_.json()
     pokemons_list = pars_data["results"]
 
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     # def get_queryset(self):
     #     return Pokemon.objects.filter(user=self.request.user)

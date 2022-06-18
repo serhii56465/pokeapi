@@ -31,13 +31,12 @@ class ListUserView(generics.ListAPIView):
 
 
 class UpdateUserView(generics.RetrieveUpdateAPIView):
-    model = User
+    # model = User
     serializer_class = UserUpdatePokemonSerializer
-
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        return self.model.objects.get(pk=1)
-        # return self.request.user
+        # return self.model.objects.get(pk=1)
+        return self.request.user
 
