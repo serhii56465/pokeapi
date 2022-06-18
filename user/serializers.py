@@ -48,12 +48,11 @@ class UserUpdatePokemonSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         pokemons_data = validated_data.pop("pokemons", None)
-        user = super().update(instance, validated_data)
         for pokemon_ in pokemons_data:
             if pokemon_.user is None:
-                setattr(pokemon_, "user", user)
+                setattr(pokemon_, "user", instance)
                 pokemon_.save()
-            elif pokemon_.user == user:
+            elif pokemon_.user == instance:
                 setattr(pokemon_, "user", None)
                 pokemon_.save()
-        return user
+        return instance
