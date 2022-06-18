@@ -14,7 +14,7 @@ urlpatterns = [
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("me/", ManageUserView.as_view(), name="manage"),
     path("users/", ListUserView.as_view(), name="list"),
-    path("user/", UpdateUserView.as_view(), name="manage_token")
+    path("user/", UpdateUserView.as_view(), name="manage_pokemon")
 ]
 
 app_name = "user"
