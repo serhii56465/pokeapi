@@ -1,11 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from pokemon.models import Pokemon
+
 
 class UserSerializer(serializers.ModelSerializer):
+    pokemons = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+
     class Meta:
         model = get_user_model()
-        fields = ("id", "email", "password", "is_staff")
+        fields = ("id", "username", "email", "password", "is_staff", "pokemons")
         read_only_fields = ("is_staff",)
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
 
@@ -22,3 +26,34 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
+
+
+class UserListSerializer(serializers.ModelSerializer):
+    pokemons = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+
+    class Meta:
+        model = get_user_model()
+        fields = ("id", "username", "email", "password", "is_staff", "pokemons")
+        read_only_fields = ("is_staff",)
+        extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
+
+
+class UserUpdatePokemonSerializer(serializers.ModelSerializer):
+    pokemons = serializers.SlugRelatedField(many=True, read_only=False, slug_field="id", queryset=Pokemon.objects.all())
+
+    class Meta:
+        model = get_user_model()
+        fields = ("id", "username", "email", "password", "is_staff", "pokemons")
+        read_only_fields = ("is_staff",)
+        extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
+
+    def update(self, instance, validated_data):
+        pokemons_data = validated_data.pop("pokemons", None)
+        for pokemon_ in pokemons_data:
+            if pokemon_.user is None:
+                setattr(pokemon_, "user", instance)
+                pokemon_.save()
+            elif pokemon_.user == instance:
+                setattr(pokemon_, "user", None)
+                pokemon_.save()
+        return instance

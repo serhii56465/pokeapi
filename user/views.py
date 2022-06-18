@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.settings import api_settings
 
 from user.models import User
-from user.serializers import UserSerializer
+from user.serializers import UserSerializer, UserListSerializer, UserUpdatePokemonSerializer
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -27,5 +27,17 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
 class ListUserView(generics.ListAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserListSerializer
+
+
+class UpdateUserView(generics.RetrieveUpdateAPIView):
+    model = User
+    serializer_class = UserUpdatePokemonSerializer
+
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.model.objects.get(pk=1)
+        # return self.request.user
 

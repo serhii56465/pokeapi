@@ -40,5 +40,3 @@ class PokemonViewSet(
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
         return Response()
-
-
