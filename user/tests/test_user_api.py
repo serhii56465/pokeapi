@@ -5,8 +5,23 @@ from rest_framework import status
 
 from rest_framework.test import APIClient
 
+from pokemon.models import Pokemon
+from user.models import User
+from user.serializers import UserUpdatePokemonSerializer
+
 USER_UPDATE_URL = reverse("user:manage_pokemon")
 USER_REGISTER_URL = reverse("user:create")
+
+
+def sample_pokemon(**params):
+    defaults = {
+        "name": "pokemon",
+        "url": "pokemon-url",
+        "user": None,
+    }
+    defaults.update(params)
+
+    return Pokemon.objects.create(**defaults)
 
 
 class UnauthenticatedUserApiTests(TestCase):
@@ -41,3 +56,17 @@ class AuthenticatedUserApiTests(TestCase):
         res = self.client.get(USER_UPDATE_URL)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def testManagePokemon(self):
+        another_user = get_user_model().objects.create_user(
+            "test2", "test2@test.com", "password"
+        )
+        pokemon_none_user = sample_pokemon()
+        pokemon_another_user = sample_pokemon(name="pokemon2", user=another_user)
+        pokemon_auth_user = sample_pokemon(name="pokemon3", user=self.user)
+
+        res = self.client.get(USER_UPDATE_URL)
+
+        auth_user = User.objects.get(username="test")
+        serializer = UserUpdatePokemonSerializer(auth_user)
+
+        self.assertEqual(res.data, serializer.data)
