@@ -28,7 +28,7 @@ class UnauthenticatedUserApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def testAuthRequired(self):
+    def test_auth_required(self):
         res = self.client.get(USER_UPDATE_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -52,11 +52,11 @@ class AuthenticatedUserApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def testAuthRequired(self):
+    def test_auth_required(self):
         res = self.client.get(USER_UPDATE_URL)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    def testManagePokemon(self):
+    def test_manage_pokemon(self):
         another_user = get_user_model().objects.create_user(
             "test2", "test2@test.com", "password"
         )
