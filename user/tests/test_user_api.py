@@ -68,7 +68,7 @@ class AuthenticatedUserApiTests(TestCase):
             "username": "test",
             "email": "test@test.com",
             "is_staff": False,
-            "pokemons": [pokemon_none_user, pokemon_another_user, pokemon_auth_user]
+            "pokemons": [pokemon_none_user.name, pokemon_another_user.name, pokemon_auth_user.name]
         }
 
         res = self.client.get(USER_UPDATE_URL)
@@ -78,9 +78,10 @@ class AuthenticatedUserApiTests(TestCase):
 
         self.assertEqual(res.data, serializer.data)
 
-        patch_res = self.client.patch(USER_UPDATE_URL, pokemos=[pokemon_none_user, pokemon_another_user, pokemon_auth_user])
+        patch_res = self.client.patch(USER_UPDATE_URL, payload)
 
         auth_user = User.objects.get(username="test")
         serializer2 = UserUpdatePokemonSerializer(auth_user, payload)
 
-        self.assertEqual(patch_res.data, serializer2.data)
+        if serializer2.is_valid():
+            self.assertEqual(patch_res.data, serializer2.data)
