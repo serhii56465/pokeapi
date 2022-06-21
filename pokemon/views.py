@@ -7,6 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 from pokemon.models import Pokemon
 from pokemon.serializers import PokemonSerializer, PokemonListSerializer
 
+# Source data for uploading pokemons
 SOURCE_DATA = "https://pokeapi.co/api/v2/pokemon"
 PAYLOAD = {'limit': 3}
 
@@ -19,6 +20,7 @@ class PokemonViewSet(
     queryset = Pokemon.objects.all()
     serializer_class = PokemonSerializer
 
+    # delete "params" for uploading all data from source
     response_ = requests.get(SOURCE_DATA, params=PAYLOAD)
     pars_data = response_.json()
     pokemons_list = pars_data["results"]
@@ -32,6 +34,7 @@ class PokemonViewSet(
         return PokemonSerializer
 
     def create(self, request, pokemons_list=pokemons_list, *args, **kwargs):
+        """Endpoint for uploading pokemons from source - use one time for each source"""
         for pokemon in pokemons_list:
             serializer = self.get_serializer(data=pokemon)
             serializer.is_valid(raise_exception=True)
