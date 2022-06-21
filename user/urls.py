@@ -5,7 +5,12 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from user.views import CreateUserView, ManageUserView, ListUserView, UpdateUserView
+from user.views import (
+    CreateUserView,
+    ManageUserView,
+    ListUserView,
+    UpdateUserView,
+)
 
 urlpatterns = [
     path("register/", CreateUserView.as_view(), name="create"),

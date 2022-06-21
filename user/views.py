@@ -39,4 +39,3 @@ class UpdateUserView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         # return self.model.objects.get(pk=1)
         return self.request.user
-

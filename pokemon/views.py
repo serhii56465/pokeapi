@@ -1,5 +1,5 @@
 import requests
-from rest_framework import mixins, status
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -24,9 +24,6 @@ class PokemonViewSet(
     pokemons_list = pars_data["results"]
 
     permission_classes = (IsAuthenticated,)
-
-    # def get_queryset(self):
-    #     return Pokemon.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
         if self.action == "list":

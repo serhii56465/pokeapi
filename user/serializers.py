@@ -5,11 +5,22 @@ from pokemon.models import Pokemon
 
 
 class UserSerializer(serializers.ModelSerializer):
-    pokemons = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    pokemons = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "email", "password", "is_staff", "pokemons")
+        fields = (
+            "id",
+            "username",
+            "email",
+            "password",
+            "is_staff",
+            "pokemons"
+        )
         read_only_fields = ("is_staff", "pokemons")
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
 
@@ -29,7 +40,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
-    pokemons = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    pokemons = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
 
     class Meta:
         model = get_user_model()
@@ -37,11 +52,22 @@ class UserListSerializer(serializers.ModelSerializer):
 
 
 class UserUpdatePokemonSerializer(serializers.ModelSerializer):
-    pokemons = serializers.SlugRelatedField(many=True, read_only=False, slug_field="id", queryset=Pokemon.objects.all())
+    pokemons = serializers.SlugRelatedField(
+        many=True,
+        read_only=False,
+        slug_field="name",
+        queryset=Pokemon.objects.all()
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "email", "is_staff", "pokemons")
+        fields = (
+            "id",
+            "username",
+            "email",
+            "is_staff",
+            "pokemons"
+        )
         read_only_fields = ("is_staff", "username", "email")
 
     def update(self, instance, validated_data):
