@@ -34,9 +34,11 @@ class PokemonViewSet(
         return PokemonSerializer
 
     def create(self, request, pokemons_list=pokemons_list, *args, **kwargs):
-        """Endpoint for uploading pokemons from source - use one time for each source"""
-        for pokemon in pokemons_list:
-            serializer = self.get_serializer(data=pokemon)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+        """
+        Endpoint for uploading pokemons from source - use one time for each source
+        """
+
+        batch = [Pokemon(name=pokemon["name"], url=pokemon["url"]) for pokemon in pokemons_list]
+
+        Pokemon.objects.bulk_create(batch)
         return Response()

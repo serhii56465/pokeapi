@@ -13,10 +13,16 @@ class CreateUserView(generics.CreateAPIView):
 
 
 class CreateTokenView(ObtainAuthToken):
+    """
+    user's login/taken token
+    """
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
+    """
+    managing user's data, user`s account
+    """
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -31,11 +37,12 @@ class ListUserView(generics.ListAPIView):
 
 
 class UpdateUserView(generics.RetrieveUpdateAPIView):
-    # model = User
+    """
+    view for updating user`s pokemons (choosing)
+    """
     serializer_class = UserUpdatePokemonSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        # return self.model.objects.get(pk=1)
         return self.request.user
